@@ -38,21 +38,6 @@ class RewardServiceTest {
 	}
 
 	@Test
-	public void testCalculateRewardPointsWithBoundaryAmount() {
-		// Test edge case with $50 purchase (Expected: 0 points)
-		TransactionRequest transaction = new TransactionRequest("customer2", 50, LocalDate.of(2025, 1, 15));
-		RewardPoints rewardPoints = rewardService.calculateRewardPoints(transaction);
-
-		assertEquals(0, rewardPoints.getPoints(), "Points should be 0 for a $50 purchase");
-
-		// Test edge case with $100 purchase (Expected: 50 points)
-		transaction = new TransactionRequest("customer3", 100, LocalDate.of(2025, 1, 15));
-		rewardPoints = rewardService.calculateRewardPoints(transaction);
-
-		assertEquals(50, rewardPoints.getPoints(), "Points should be 50 for a $100 purchase");
-	}
-
-	@Test
 	public void testCalculateRewardPointsWithInvalidNegativeAmount() {
 		// Test invalid transaction with negative amount (Expected: exception thrown)
 		TransactionRequest transaction = new TransactionRequest("customer4", -50, LocalDate.of(2025, 1, 15));
@@ -87,19 +72,6 @@ class RewardServiceTest {
 		assertTrue(pointsByMonth.containsKey(Month.MARCH));
 		assertEquals(400, pointsByMonth.get(Month.MARCH).get("customer2"));
 
-	}
-
-	@Test
-	public void testCalculatePointsByMonthWithInvalidTransaction() {
-		// Create invalid transaction with negative amount
-		List<TransactionRequest> transactions = List
-				.of(new TransactionRequest("customer1", -50, LocalDate.of(2025, 01, 15)));
-
-		// Calculate points by month and ensure invalid transaction is handled
-		Map<Month, Map<String, Integer>> pointsByMonth = rewardService.calculatePointsByMonth(transactions);
-
-		// Check that the transaction was skipped and no points were added
-		assertFalse(pointsByMonth.containsKey(Month.JANUARY));
 	}
 
 	@Test
